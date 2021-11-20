@@ -23,6 +23,12 @@ class CommentListSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'body', 'children')
 
 
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('body', 'post', 'parent')
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
@@ -32,7 +38,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = ('body',)
 
 
 class PostsSerializer(serializers.ModelSerializer):
@@ -46,7 +52,7 @@ class PostsSerializer(serializers.ModelSerializer):
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'is_staff', 'date_joined', 'is_active')
+        fields = ('id', 'first_name', 'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
         user = User(

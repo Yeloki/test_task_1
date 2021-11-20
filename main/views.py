@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from .models import Post, User, Comment
 
 from .serializers import PostsSerializer, PostCreateSerializer
-from .serializers import CommentSerializer
+from .serializers import CommentSerializer, CommentCreateSerializer
 from .serializers import UsersSerializer
 
 
@@ -14,11 +14,14 @@ class PostListView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        post = PostCreateSerializer(data=request.data)
-        if post.is_valid():
-            post.save()
-            return Response(status=201)
-        return Response(status=400)
+        if not request.user.is_anonymous:
+            post = PostCreateSerializer(data=request.data)
+            if post.is_valid():
+                post.validated_data['user'] = request.user
+                post.save()
+                return Response(status=201)
+            return Response(status=400)
+        return Response(status=403)
 
 
 class PostView(APIView):
@@ -55,10 +58,14 @@ class PostView(APIView):
 
 class CommentCreateView(APIView):
     def post(self, request):
-        comment = CommentSerializer(data=request.data)
-        if comment.is_valid():
-            comment.save()
-        return Response(status=201)
+        if not request.user.is_anonymous:
+            comment = CommentCreateSerializer(data=request.data)
+            if comment.is_valid():
+                comment.validated_data['user'] = request.user
+                comment.save()
+                return Response(status=201)
+            return Response(status=400)
+        return Response(status=403)
 
 
 class CommentView(APIView):
