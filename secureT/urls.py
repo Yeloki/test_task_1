@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 
+import main.views
 from secureT import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', main.views.docs),
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/', include('main.urls')),
