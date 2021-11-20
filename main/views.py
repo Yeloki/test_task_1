@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from .models import Post, User, Comment
 from django.shortcuts import render
 from .serializers import PostsSerializer, PostCreateSerializer
-from .serializers import CommentSerializer, CommentCreateSerializer
+from .serializers import CommentSerializer, CommentCreateSerializer, CommentUpdateSerializer
 from .serializers import UsersSerializer
 
 
@@ -50,12 +50,10 @@ class PostView(APIView):
         if obj is None:
             return Response(status=404)
         if request.user.is_staff or obj.user == request.user:
-            updated = PostsSerializer(obj, data=request.data, partial=True)
-            print(obj.body)
+            updated = PostCreateSerializer(obj, data=request.data, partial=True)
             if updated.is_valid():
-                if 'user' not in updated.validated_data:
-                    updated.save()
-                    return Response(status=202)
+                updated.save()
+                return Response(status=202)
             return Response(status=400)
         return Response(status=403)
 
@@ -84,7 +82,7 @@ class CommentView(APIView):
         if obj is None:
             return Response(status=404)
         if request.user.is_staff or obj.user == request.user:
-            updated = CommentSerializer(obj, data=request.data, partial=True)
+            updated = CommentUpdateSerializer(obj, data=request.data, partial=True)
             if not updated.is_valid():
                 return Response(status=400)
             if 'post' not in updated.validated_data and 'user' not in updated.validated_data:
