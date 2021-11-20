@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API Documentation</title>
+</head>
+<body>
+<div class="container">
+    <h1>API Documentation</h1>
+    <h3>user API</h3>
+    <p>
+        <a href="{% url 'users' %}">link</a><br>
+        GET - get all users in system<br>
+        POST - create (register) new user<br>
+        POST fields:<br>
+        "email" - (required)<br>
+        "first_name" - (required)<br>
+        "last_name" - (required)<br>
+        "password" - (required)<br>
+        <a href="{% url 'user' 1 %}">link</a><br>
+        GET - get user info<br>
+        login or is_staff flag required:<br>
+        PUT - update user info<br>
+        PUT fields:<br>
+        "first_name" - (optional)<br>
+        "last_name" - (optional)<br>
+        "password" - (optional)<br>
+        DELETE - delete user<br>
+        delete this user from system<br>
+
+        Generate auth token:<br>
+        <a href="{% url 'login' %}">login</a><br>
+        <a href="{% url 'logout'%}">logout</a>
+    </p>
+    <h3>post API</h3>
+    <p>
+        <a href="{% url 'posts' %}">link</a><br>
+        GET - get all posts in system<br>
+        POST - create new post (login required)<br>
+        POST fields:<br>
+        "body" - (required)<br>
+        <a href="{% url 'post' 1 %}">link</a><br>
+        GET - get post info<br>
+        login or is_staff flag required:<br>
+        PUT - update post info (login required)<br>
+        PUT fields:<br>
+        "body" - (optional)<br>
+        DELETE - delete post (login required)<br>
+        delete this post from system<br>
+    </p>
+    <h3>comment API</h3>
+    <p>
+        <a href="{% url 'comments' %}">link</a><br>
+        POST - create new comment (login required)<br>
+        POST fields:<br>
+        "post" - post id (required)<br>
+        "body" - (required)<br>
+        "parent" - comment id (optional)<br>
+        <a href="{% url 'comment' 1 %}">link</a><br>
+        GET - get comment info<br>
+        login or is_staff flag required:<br>
+        PUT - update comment info<br>
+        PUT fields:<br>
+        "body" - (optional)<br>
+        DELETE - delete comment<br>
+        delete this comment from system<br>
+    </p>
+</div>
+</body>
+</html>

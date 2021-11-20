@@ -1,0 +1,1 @@
+web: gunicorn secureT.wsgi --log-file -
