@@ -12,7 +12,7 @@ def docs(request):
     return render(request, 'docs.html')
 
 
-def confirm_account(request, link):
+def verify_account(request, link):
     context = dict()
     obj = CompleteRegistrationLink.objects.filter(link=link).first()
     if obj is None:
