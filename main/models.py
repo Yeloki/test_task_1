@@ -1,9 +1,10 @@
-from django.db import models
-from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.core.mail import send_mail
-from .managers import UserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.core import validators
+from django.core.mail import send_mail
+from django.db import models
+
+from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -13,8 +14,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField('Фамилия', max_length=30)
     date_joined = models.DateTimeField('Дата регистрации', auto_now_add=True)
     is_active = models.BooleanField('active', default=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -54,3 +53,8 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     body = models.TextField()
     publication_time = models.DateTimeField(verbose_name='Время публикации', auto_now=True)
+
+
+class CompleteRegistrationLink(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    link = models.CharField(max_length=65, primary_key=True)

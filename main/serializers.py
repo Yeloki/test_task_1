@@ -1,5 +1,11 @@
+from hashlib import sha256
+
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
-from .models import Post, Comment, User
+
+from secureT.settings import SECRET_KEY, EMAIL_HOST_USER, VERIFICATION_LINK
+from .models import Post, Comment, User, CompleteRegistrationLink
 
 
 class FilterCommentListSerializer(serializers.ListSerializer):
@@ -55,20 +61,43 @@ class PostsSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'body', 'publication_time', 'comments')
 
 
-class UsersSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'date_joined')
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'password')
 
     def create(self, validated_data):
         user = User(
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            is_active=False
         )
         user.set_password(validated_data['password'])
+        key = sha256((get_random_string(length=32) + SECRET_KEY + user.email).encode('utf-8')).hexdigest()
         user.save()
+        CompleteRegistrationLink.objects.create(
+            user=user,
+            link=key
+        )
+        status = send_mail('Подтверждение аккаунта',
+                           f'Для подтверждения аккаунта перейдите по этой ссылке: {VERIFICATION_LINK}{key}',
+                           EMAIL_HOST_USER,
+                           [user.email, ],
+                           fail_silently=False)
         return validated_data
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'password')
 
     def update(self, instance, validated_data):
         if 'password' in validated_data:

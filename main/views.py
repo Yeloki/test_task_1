@@ -1,14 +1,27 @@
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Post, User, Comment
-from django.shortcuts import render
-from .serializers import PostsSerializer, PostCreateSerializer
+
+from .models import Post, User, Comment, CompleteRegistrationLink
 from .serializers import CommentSerializer, CommentCreateSerializer, CommentUpdateSerializer
-from .serializers import UsersSerializer
+from .serializers import PostsSerializer, PostCreateSerializer
+from .serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer
 
 
 def docs(request):
     return render(request, 'docs.html')
+
+
+def confirm_account(request, link):
+    context = dict()
+    obj = CompleteRegistrationLink.objects.filter(link=link).first()
+    if obj is None:
+        context['error'] = 1
+    else:
+        obj.user.is_active = True
+        obj.user.save()
+        obj.delete()
+    return render(request, 'confirm.html', context)
 
 
 class PostListView(APIView):
@@ -102,11 +115,11 @@ class CommentView(APIView):
 
 class UserListView(APIView):
     def get(self, request):
-        serializer = UsersSerializer(User.objects.all(), many=True)
+        serializer = UserSerializer(User.objects.all(), many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        user = UsersSerializer(data=request.data)
+        user = UserCreateSerializer(data=request.data)
         if user.is_valid():
             user.save()
             return Response(status=201)
@@ -118,7 +131,7 @@ class UserView(APIView):
         obj = User.objects.filter(id=pk).first()
         if obj is None:
             return Response(status=404)
-        return Response(UsersSerializer(obj).data)
+        return Response(UserSerializer(obj).data)
 
     def put(self, request, pk):
         obj = User.objects.filter(id=pk).first()
@@ -126,7 +139,7 @@ class UserView(APIView):
             return Response(status=404)
         if obj != request.user and not request.user.is_staff:
             return Response(status=403)
-        updated = UsersSerializer(obj, data=request.data, partial=True)
+        updated = UserUpdateSerializer(obj, data=request.data, partial=True)
         if updated.is_valid():
             updated.save()
             return Response(status=202)
