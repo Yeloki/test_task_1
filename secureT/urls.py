@@ -26,7 +26,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/', include('main.urls')),
-    path('verfy/<str:link>', main.views.confirm_account)
+    path('verfy/<str:link>', main.views.verify_account)
 
 ]
 
