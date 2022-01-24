@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sf%k8$#7m$$gckdzw$#6!&u^^@g(zeou+$m=zf_@(3g95-d+za'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'secureT.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd79akrt7an5sk3',
-        'USER': 'qkekwqifannhbl',
-        'PASSWORD': 'c08f63d992cce15c65547a477916ec2cc37e5051434ae78f78ef43519344fc13',
-        'HOST': 'ec2-35-168-80-116.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
 
     }
 }
@@ -142,8 +142,8 @@ AUTH_USER_MODEL = 'main.User'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'fen.portfolio@gmail.com'
-EMAIL_HOST_PASSWORD = 'mfyvvqwfrnlitqcu'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 465  # 465 587
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
